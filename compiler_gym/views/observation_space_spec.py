@@ -11,7 +11,8 @@ from gym.spaces import Box, Space
 
 from compiler_gym.service import observation_t, scalar_range2tuple
 from compiler_gym.service.proto import Observation, ObservationSpace
-from compiler_gym.spaces import Scalar, Sequence
+from compiler_gym.spaces.scalar import Scalar
+from compiler_gym.spaces.sequence import Sequence
 
 
 def _json2nx(observation):

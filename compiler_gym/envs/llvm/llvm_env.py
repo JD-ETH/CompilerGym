@@ -15,6 +15,11 @@ from gym.spaces import Dict as DictSpace
 from compiler_gym.envs.compiler_env import CompilerEnv, step_t
 from compiler_gym.envs.llvm.benchmarks import make_benchmark
 from compiler_gym.envs.llvm.datasets import LLVM_DATASETS
+from compiler_gym.envs.llvm.llvm_rewards import (
+    BaselineImprovementNormalizedReward,
+    CostFunctionReward,
+    NormalizedReward,
+)
 from compiler_gym.spaces import Commandline, CommandlineFlag, Scalar, Sequence
 from compiler_gym.third_party.autophase import AUTOPHASE_FEATURE_NAMES
 from compiler_gym.third_party.inst2vec import Inst2vecEncoder
@@ -64,7 +69,86 @@ class LlvmEnv(CompilerEnv):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            *args,
+            **kwargs,
+            rewards=[
+                CostFunctionReward(
+                    id="IrInstructionCount",
+                    cost_function="IrInstructionCount",
+                    init_cost_function="IrInstructionCountO0",
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=False,
+                ),
+                NormalizedReward(
+                    id="IrInstructionCountNorm",
+                    cost_function="IrInstructionCount",
+                    init_cost_function="IrInstructionCountO0",
+                    max=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=False,
+                ),
+                BaselineImprovementNormalizedReward(
+                    id="IrInstructionCountO3",
+                    cost_function="IrInstructionCount",
+                    baseline_cost_function="IrInstructionCountO3",
+                    init_cost_function="IrInstructionCountO0",
+                    success_threshold=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=False,
+                ),
+                BaselineImprovementNormalizedReward(
+                    id="IrInstructionCountOz",
+                    cost_function="IrInstructionCount",
+                    baseline_cost_function="IrInstructionCountOz",
+                    init_cost_function="IrInstructionCountO0",
+                    success_threshold=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=False,
+                ),
+                CostFunctionReward(
+                    id="ObjectTextSizeBytes",
+                    cost_function="ObjectTextSizeBytes",
+                    init_cost_function="ObjectTextSizeO0",
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=True,
+                ),
+                NormalizedReward(
+                    id="ObjectTextSizeNorm",
+                    cost_function="ObjectTextSizeBytes",
+                    init_cost_function="ObjectTextSizeO0",
+                    max=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=True,
+                ),
+                BaselineImprovementNormalizedReward(
+                    id="ObjectTextSizeO3",
+                    cost_function="ObjectTextSizeBytes",
+                    init_cost_function="ObjectTextSizeO0",
+                    baseline_cost_function="ObjectTextSizeO3",
+                    success_threshold=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=True,
+                ),
+                BaselineImprovementNormalizedReward(
+                    id="ObjectTextSizeOz",
+                    cost_function="ObjectTextSizeBytes",
+                    init_cost_function="ObjectTextSizeO0",
+                    baseline_cost_function="ObjectTextSizeOz",
+                    success_threshold=1,
+                    default_negates_returns=True,
+                    deterministic=True,
+                    platform_dependent=True,
+                ),
+            ],
+        )
         self.actions: List[int] = []
         self.datasets_site_path = site_data_path("llvm/10.0.0/bitcode_benchmarks")
 

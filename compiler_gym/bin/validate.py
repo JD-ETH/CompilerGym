@@ -71,7 +71,7 @@ from compiler_gym import ValidationResult
 from compiler_gym.envs.compiler_env import CompilerEnvState
 from compiler_gym.util.flags.env_from_flags import env_from_flags
 from compiler_gym.util.shell_format import emph
-from compiler_gym.util.statistics import geometric_mean
+from compiler_gym.util.statistics import geometric_mean, geometric_std
 from compiler_gym.validate import validate_states
 
 flags.DEFINE_boolean(
@@ -185,8 +185,8 @@ def main(argv):
         f"(std: {emph(walltime_std)})"
     )
     reward_gmean = f"{geometric_mean(rewards):.3f}"
-    reward_std = f"{stdev(rewards):.3f}"
-    print(f"{gmean_name}: {emph(reward_gmean)} (std: {emph(reward_std)})")
+    reward_std = f"{geometric_std(rewards):.3f}"
+    print(f"{gmean_name}: {emph(reward_gmean)} (gstd: {emph(reward_std)})")
 
     if error_count:
         sys.exit(1)

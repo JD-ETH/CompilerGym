@@ -11,5 +11,13 @@ def geometric_mean(iterable):
     # performaning (and printing a warning about) a division by zero below.
     if not np.all(all):
         return 0
-    a = np.log(vals)
-    return np.exp(a.sum() / len(a))
+    return np.exp(np.log(vals).sum() / len(vals))
+
+
+def geometric_std(iterable):
+    vals = np.array(iterable)
+    # Shortcut to return 0 when any element of the input is zero without
+    # performaning (and printing a warning about) a division by zero below.
+    if not np.all(iterable):
+        return 0
+    return np.exp(np.std(np.log(vals).sum() / len(vals)))

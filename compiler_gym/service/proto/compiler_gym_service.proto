@@ -125,8 +125,8 @@ message ActionSpace {
 // Observations.
 
 message Observation {
-  // A point in an ObservationSpace is _either_ a vector of integers, a vector
-  // of real values, a string, or an opaque byte array.
+  // A point in an ObservationSpace is _either_ a scalar or vector of integers
+  // or real values, a string, or an opaque byte array.
   oneof value {
     Int64List int64_list = 1;
     DoubleList double_list = 2;

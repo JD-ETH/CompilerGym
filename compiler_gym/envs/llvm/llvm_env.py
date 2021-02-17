@@ -181,14 +181,16 @@ class LlvmEnv(CompilerEnv):
             id="Inst2vecPreprocessedText",
             base_id="Ir",
             space=Sequence(size_range=(0, None), dtype=str),
-            cb=lambda base_observation: self.inst2vec.preprocess(base_observation),
+            translate=lambda base_observation: self.inst2vec.preprocess(
+                base_observation
+            ),
             default_value="",
         )
         self.observation.add_derived_space(
             id="Inst2vecEmbeddingIndices",
             base_id="Ir",
             space=Sequence(size_range=(0, None), dtype=np.int32),
-            cb=lambda base_observation: self.inst2vec.encode(
+            translate=lambda base_observation: self.inst2vec.encode(
                 self.inst2vec.preprocess(base_observation)
             ),
             default_value=np.array([self.inst2vec.vocab["!UNK"]]),
@@ -197,7 +199,7 @@ class LlvmEnv(CompilerEnv):
             id="Inst2vec",
             base_id="Ir",
             space=Sequence(size_range=(0, None), dtype=np.ndarray),
-            cb=lambda base_observation: self.inst2vec.embed(
+            translate=lambda base_observation: self.inst2vec.embed(
                 self.inst2vec.encode(self.inst2vec.preprocess(base_observation))
             ),
             default_value=np.vstack(
@@ -214,7 +216,7 @@ class LlvmEnv(CompilerEnv):
                     for name in AUTOPHASE_FEATURE_NAMES
                 }
             ),
-            cb=lambda base_observation: {
+            translate=lambda base_observation: {
                 name: val
                 for name, val in zip(AUTOPHASE_FEATURE_NAMES, base_observation)
             },

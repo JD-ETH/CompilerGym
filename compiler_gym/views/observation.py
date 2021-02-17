@@ -57,7 +57,7 @@ class ObservationView(object):
             raise ServiceError(
                 f"Requested 1 observation but received {len(reply.observation)}"
             )
-        return space.cb(reply.observation[0])
+        return space.translate(reply.observation[0])
 
     def add_derived_space(
         self,
@@ -74,7 +74,7 @@ class ObservationView(object):
         >>> env.observation.add_derived_space(
             id="src_len",
             base_id="src",
-            cb=lambda src: np.array([len(src)], dtype=np.int32),
+            translate=lambda src: np.array([len(src)], dtype=np.int32),
             shape=Box(shape=(1,), dtype=np.int32),
         )
         >>> env.observation["src_len"]

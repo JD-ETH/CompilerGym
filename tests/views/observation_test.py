@@ -150,7 +150,7 @@ def test_add_derived_space():
         id="ir_len",
         base_id="ir",
         space=Box(low=0, high=float("inf"), shape=(1,), dtype=int),
-        cb=lambda base: [
+        translate=lambda base: [
             len(base),
         ],
     )

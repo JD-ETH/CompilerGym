@@ -685,7 +685,7 @@ class CompilerEnv(gym.Env):
                 f"but received {len(reply.observation)}"
             )
         observations = [
-            self.observation.spaces[obs].cb(val)
+            self.observation.spaces[obs].translate(val)
             for obs, val in zip(observation_spaces, reply.observation)
         ]
 

@@ -179,7 +179,7 @@ class ObservationSpaceSpec(object):
             )
 
             def translate(observation):
-                return int(observation.scalar_double)
+                return float(observation.scalar_double)
 
             to_string = str
         else:

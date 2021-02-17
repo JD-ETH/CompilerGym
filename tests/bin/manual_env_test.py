@@ -5,6 +5,7 @@
 """Tests for //compiler_gym/bin:manual_env."""
 import re
 import sys
+from difflib import context_diff
 from io import StringIO
 from random import seed
 
@@ -45,11 +46,13 @@ The 'tutorial' command will give a step by step guide.
             + output
         )
         if not re.match(pattern, out.stdout):
-            pytest.fail(
-                f"Failed to match regex:\n{pattern}\n"
-                + ("*" * 80)
-                + f"\nUsing output:\n{out.stdout}\n"
+            diff = context_diff(
+                pattern.split("\n"),
+                out.stdout.split("\n"),
+                fromfile="Expected regexp pattern",
+                tofile="Captured output",
             )
+            pytest.fail("Failed to match regex! Diff\n" + "\n".join(diff))
 
     finally:
         sys.stdin = old_stdin
@@ -139,8 +142,7 @@ def test_reward(cBench_dataset):
         action -mem2reg
         reward
         reward IrInstructionCountNorm
-        stack
-        """,
+        stack""",
         r"""compilergym:NO-BENCHMARK> Reset benchmark://cBench-v0/adpcm environment in [0-9.mu]*s
 compilergym:cBench-v0/adpcm> Reward IrInstructionCount in [0-9.mu]*s
 compilergym:cBench-v0/adpcm> Action -mem2reg
@@ -148,12 +150,8 @@ Reward: 181.000000
 Actions -mem2reg in [0-9.mu]*s with reward 181.0.
 compilergym:cBench-v0/adpcm> 0.000000
 Reward IrInstructionCount in [0-9.mu]*s
-compilergym:cBench-v0/adpcm> 0.000000
+compilergym:cBench-v0/adpcm> 0.404018
 Reward IrInstructionCountNorm in [0-9.mu]*s
-compilergym:cBench-v0/adpcm>    Depth | Action   | Effect   | Done   |   Reward |   Cumulative Reward
----------+----------+----------+--------+----------+---------------------
-       1 | -mem2reg | True     | False  |      181 |                 181
-       0 | <init>   | False    | False  |        0 |                   0
 compilergym:cBench-v0/adpcm>    Depth | Action   | Effect   | Done   |   Reward |   Cumulative Reward
 ---------+----------+----------+--------+----------+---------------------
        1 | -mem2reg | True     | False  |      181 |                 181
@@ -173,13 +171,13 @@ def test_observation(cBench_dataset):
         r"""compilergym:NO-BENCHMARK> Reset benchmark://cBench-v0/adpcm environment in [0-9.mu]*s
 compilergym:cBench-v0/adpcm> Observation IrInstructionCount in [0-9.mu]*s
 compilergym:cBench-v0/adpcm> Action -mem2reg
-Observation: \[267\]
+Observation: 267
 Actions -mem2reg in [0-9.mu]*s with reward 0.
-compilergym:cBench-v0/adpcm> \[267\]
+compilergym:cBench-v0/adpcm> 267
 Observation IrInstructionCount in [0-9.mu]*s
-compilergym:cBench-v0/adpcm> \[206\]
+compilergym:cBench-v0/adpcm> 206
 Observation IrInstructionCountOz in [0-9.mu]*s
-compilergym:cBench-v0/adpcm> \[206\]
+compilergym:cBench-v0/adpcm> 206
 Observation IrInstructionCountOz in [0-9.mu]*s""",
     )
 

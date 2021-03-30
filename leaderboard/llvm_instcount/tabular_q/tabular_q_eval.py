@@ -8,8 +8,8 @@ from typing import Dict
 from absl import app
 
 from compiler_gym.envs import LlvmEnv
+from compiler_gym.leaderboard.llvm_instcount import eval_llvm_instcount_policy
 from examples.tabular_q import StateActionTuple, rollout, train
-from leaderboard.llvm_codesize.eval_policy import eval_policy
 
 
 def train_and_run(env: LlvmEnv) -> None:
@@ -23,4 +23,4 @@ def train_and_run(env: LlvmEnv) -> None:
 
 
 if __name__ == "__main__":
-    app.run(eval_policy(train_and_run))
+    app.run(eval_llvm_instcount_policy(train_and_run))

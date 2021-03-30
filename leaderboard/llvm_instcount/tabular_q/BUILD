@@ -7,7 +7,7 @@ py_binary(
     name = "tabular_q_eval",
     srcs = ["tabular_q_eval.py"],
     deps = [
+        "//compiler_gym/leaderboard:llvm_instcount",
         "//examples:tabular_q",
-        "//leaderboard/llvm_codesize:eval_policy",
     ],
 )
